@@ -192,7 +192,7 @@ Now run regressions of changes in individual tenure status at 12 and 24 months h
     
 ```
 
-Probility of owning home after 12 months     
+Probability of owning home after 12 months     
 ```{r}
     print(coef.h1.own)
 
