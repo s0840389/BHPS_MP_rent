@@ -61,7 +61,7 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
     
     dtm=merge(dt,Yq,by.x=c('year','qtr'),by.y=c('year','qtr'),all.x=TRUE)
     
-    dtm=dtm[ytot>mininc &age_dv>=20&age_dv<=80&year>=1996&year<=2019]
+    dtm=dtm[hoh==1&ytot>mininc &age_dv>=20&age_dv<=80&year>=1996&year<=2019]
     
     # additional cleaning steps
     
@@ -118,8 +118,8 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
     # macro specification
     
     magg6=ivreg(data=Yq,lead(GDP,6)~dr+Xagg,~FSScm2+Xagg)
-    V.magg6=vcovHAC(magg24)
-    magg.coef6=coeftest(magg24,V.magg24)
+    V.magg6=vcovHAC(magg6)
+    magg.coef6=coeftest(magg6,V.magg6)
     
   # initial check on correlation with gdp
     
@@ -196,4 +196,10 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
     fg.inc=fg.hor(coef.h2.inc,V.h2.inc,'dr',c(10,30,50,70,85,95),'Prob of owning home (24 months, pp)','Income percentile')
     ggsave('own_inc.pdf',fg.inc,units = 'cm',width=15,height=12)
     
-    
+    # print regression results
+    sink('reg_output.txt')
+    print(m.dgdp)
+    print(coef.h1.own)
+    print(coef.h2.own)
+    sink()
+    sink()

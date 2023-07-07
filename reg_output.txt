@@ -1,0 +1,42 @@
+
+Call:
+lm(formula = dytothh_H1 ~ dgdp, data = dtm, weights = indin_lw)
+
+Weighted Residuals:
+   Min     1Q Median     3Q    Max 
+-2.262 -0.139  0.000  0.000 43.706 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 0.110919   0.005982  18.542  < 2e-16 ***
+dgdp        0.942653   0.255712   3.686 0.000228 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.7466 on 114219 degrees of freedom
+  (4902 observations deleted due to missingness)
+Multiple R-squared:  0.000119,	Adjusted R-squared:  0.0001102 
+F-statistic: 13.59 on 1 and 114219 DF,  p-value: 0.0002276
+
+
+t test of coefficients:
+
+                    Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)        0.0558488  0.0027056  20.6416 < 2.2e-16 ***
+dr                -4.2704230  1.2837990  -3.3264  0.000880 ***
+factor(owner)1     0.9296130  0.0028303 328.4457 < 2.2e-16 ***
+dr:factor(owner)1  4.1545395  1.3489556   3.0798  0.002072 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                    Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)        0.0874016  0.0035927  24.3276   <2e-16 ***
+dr                -2.6904503  2.1581956  -1.2466   0.2125    
+factor(owner)1     0.8912062  0.0035805 248.9049   <2e-16 ***
+dr:factor(owner)1  3.2598042  2.0973243   1.5543   0.1201    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
