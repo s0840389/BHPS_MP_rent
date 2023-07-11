@@ -62,6 +62,7 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
     dtm=merge(dt,Yq,by.x=c('year','qtr'),by.y=c('year','qtr'),all.x=TRUE)
     
     dtm=dtm[hoh==1&ytot>mininc &age_dv>=20&age_dv<=80&year>=1996&year<=2019]
+    #dtm=dtm[ytot>mininc &age_dv>=20&age_dv<=80&year>=1996&year<=2019]
     
     # additional cleaning steps
     
@@ -123,43 +124,81 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
     
   # initial check on correlation with gdp
     
-    m.dgdp=summary(lm(data=dtm,dytothh_H1~dgdp,weights = indin_lw))
+    m.dgdp=summary(lm(data=dtm,dytot_H1~dgdp,weights = indin_lwnorm))
 
 ## micro regressions    
     
    # 1 year to owner transition
     
-    m.h1.own=ivreg(data=dtm,owner_H1~dr*factor(owner),~FSScm2*factor(owner),weights=indin_lw)
+    m.h1.own=ivreg(data=dtm,owner_H1~dr*factor(owner)+Xm,~FSScm2*factor(owner)+Xm,weights=indin_lwnorm)
     V.h1.own=vcovCL(m.h1.own,~year)
     coef.h1.own=coeftest(m.h1.own,V.h1.own)
-
+    
     # 2 year to-owner transition
     
-    m.h2.own=ivreg(data=dtm,owner_H2~dr*factor(owner),~FSScm2*factor(owner),weights=indin_lw)
+    m.h2.own=ivreg(data=dtm,owner_H2~dr*factor(owner)+Xm,~FSScm2*factor(owner)+Xm,weights=indin_lwnorm)
     V.h2.own=vcovCL(m.h2.own,~wave)
     coef.h2.own=coeftest(m.h2.own,V.h2.own)
     
+    
+    # 1 year to-landlord transition
+    
+    m.h1.ll=ivreg(data=dtm,landlordF_H1~dr*factor(landlordF)+Xm,~FSScm2*factor(owner)+Xm,weights=indin_lwnorm)
+    V.h1.ll=vcovCL(m.h1.ll,~wave)
+    coef.h1.ll=coeftest(m.h1.ll,V.h1.ll)
+    
+    # 2 year to-landlord transition
+    
+    m.h2.ll=ivreg(data=dtm,landlordF_H2~dr*factor(landlordF)+Xm,~FSScm2*factor(owner)+Xm,weights=indin_lwnorm)
+    V.h2.ll=vcovCL(m.h2.ll,~wave)
+    coef.h2.ll=coeftest(m.h2.ll,V.h2.ll)  
+    
+    # 1 year hhsize 
+    
+    dtm$MultiAdult=1*(dtm$nadults>2)
+    dtm$MultiAdult_H1=1*(dtm$nadults_H1>2)
+    dtm$MultiAdult_H2=1*(dtm$nadults_H2>2)
+    
+    m.h1.size=ivreg(data=dtm,MultiAdult_H1~dr + MultiAdult+Xm,~FSScm2*+MultiAdult+Xm,weights=indin_lwnorm)
+    V.h1.size=vcovCL(m.h1.size,~wave)
+    coef.h1.size=coeftest(m.h1.size,V.h1.size)  
+    
+    # 2 year size 
+    m.h2.size=ivreg(data=dtm,MultiAdult_H2~dr +MultiAdult+Xm,~FSScm2 +MultiAdult+Xm,weights=indin_lwnorm)
+    V.h2.size=vcovCL(m.h2.size,~wave)
+    coef.h2.size=coeftest(m.h2.size,V.h2.size)  
+    
+    # 1 year size age
+    m.h1.sizeage=ivreg(data=dtm,MultiAdult_H1~dr*agecat +MultiAdult+Xm,~FSScm2*agecat +MultiAdult+Xm,weights=indin_lwnorm)
+    V.h1.sizeage=vcovCL(m.h1.sizeage,~wave)
+    coef.h1.sizeage=coeftest(m.h1.sizeage,V.h1.sizeage)  
+    
+    # 2 year size age
+    m.h2.sizeage=ivreg(data=dtm,MultiAdult_H2~dr*agecat +MultiAdult+Xm,~FSScm2*agecat +MultiAdult+Xm,weights=indin_lwnorm)
+    V.h2.sizeage=vcovCL(m.h2.sizeage,~wave)
+    coef.h2.sizeage=coeftest(m.h2.sizeage,V.h2.sizeage)  
+    
     # 1 year transition by age
     
-    m.h1.age=ivreg(data=dtm,owner_H1~dr*factor(agecat),~FSScm2*factor(agecat),weights=indin_lw)
+    m.h1.age=ivreg(data=dtm,owner_H1~dr*factor(agecat)+Xm,~FSScm2*factor(agecat)+Xm,weights=indin_lwnorm)
     V.h1.age=vcovCL(m.h1.age,~wave)
     coef.h1.age=coeftest(m.h1.age,V.h1.age)
         
     # 2 year transition by age
     
-    m.h2.age=ivreg(data=dtm,owner_H2~dr*factor(agecat),~FSScm2*factor(agecat),weights=indin_lw)
+    m.h2.age=ivreg(data=dtm,owner_H2~dr*factor(agecat)+Xm,~FSScm2*factor(agecat)+Xm,weights=indin_lwnorm)
     V.h2.age=vcovCL(m.h2.age,~wave)
     coef.h2.age=coeftest(m.h2.age,V.h2.age)
     
     # 1 year transition by income
     
-    m.h1.inc=ivreg(data=dtm,owner_H1~dr*factor(g2_indbar3),~FSScm2*factor(g2_indbar3),weights=indin_lw)
+    m.h1.inc=ivreg(data=dtm,owner_H1~dr*factor(g2_indbar3)+Xm,~FSScm2*factor(g2_indbar3)+Xm,weights=indin_lwnorm)
     V.h1.inc=vcovCL(m.h1.inc,~wave)
     coef.h1.inc=coeftest(m.h1.inc,V.h1.inc)
     
     # 2 year transition by income
     
-    m.h2.inc=ivreg(data=dtm,owner_H2~dr*factor(g2_indbar3),~FSScm2*factor(g2_indbar3),weights=indin_lw)
+    m.h2.inc=ivreg(data=dtm,owner_H2~dr*factor(g2_indbar3)+Xm,~FSScm2*factor(g2_indbar3)+Xm,weights=indin_lwnorm)
     V.h2.inc=vcovCL(m.h2.inc,~wave)
     coef.h2.inc=coeftest(m.h2.inc,V.h2.inc)
     
@@ -190,16 +229,55 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
       return(fg) 
     }
     
-    fg.age=fg.hor(coef.h2.age,V.h2.age,'dr',c(25,35,45,57.5,75),'Prob of owning home (24 months, pp)','age')
+    fg.age=fg.hor(coef.h1.age,V.h1.age,'dr',c(25,35,45,57.5,75),'Prob of owning home (12 months, pp)','age')
     ggsave('own_age.pdf',fg.age,units = 'cm',width=15,height=12)
     
-    fg.inc=fg.hor(coef.h2.inc,V.h2.inc,'dr',c(10,30,50,70,85,95),'Prob of owning home (24 months, pp)','Income percentile')
+    fg.sizeageh1=fg.hor(coef.h1.sizeage,V.h1.sizeage,'dr',c(25,35,45,57.5,75),'Prob of living in multi-adult house (12 months)','age')
+    ggsave('size_age_h1.pdf',fg.sizeageh1,units = 'cm',width=15,height=12)
+    
+    fg.sizeageh2=fg.hor(coef.h2.sizeage,V.h2.sizeage,'dr',c(25,35,45,57.5,75),'Prob of living in multi-adult house (24 months)','age')
+    ggsave('size_age_h2.pdf',fg.sizeageh2,units = 'cm',width=15,height=12)
+    
+    fg.inc=fg.hor(coef.h1.inc,V.h1.inc,'dr',c(10,30,50,70,85,95),'Prob of owning home (12 months, pp)','Income percentile')
     ggsave('own_inc.pdf',fg.inc,units = 'cm',width=15,height=12)
+    
+    
+    ## robustness
+    
+    # 1 year to owner transition [svarshock]
+    m.h1.ownR1=lm(data=dtm,owner_H1~svarshock*factor(owner)+Xm,weights=indin_lwnorm)
+    V.h1.ownR1=vcovCL(m.h1.ownR1,~year)
+    coef.h1.ownR1=coeftest(m.h1.ownR1,V.h1.ownR1)
+    
+    # 1 year to owner transition [same sample period]
+    sel=dtm$year>=2004
+    m.h1.ownR2=ivreg(data=dtm[sel],owner_H1~dr*factor(owner)+Xm[sel,],~FSScm2*factor(owner)+Xm[sel,],weights=indin_lwnorm)
+    V.h1.ownR2=vcovCL(m.h1.ownR2,~year)
+    coef.h1.ownR2=coeftest(m.h1.ownR2,V.h1.ownR2)
+    
+    # 1 year to owner transition [svarshock]
+    m.h1.ownR3=lm(data=dtm[sel],owner_H1~svarshock*factor(owner)+Xm[sel,],weights=indin_lwnorm)
+    V.h1.ownR3=vcovCL(m.h1.ownR3,~year)
+    coef.h1.ownR3=coeftest(m.h1.ownR3,V.h1.ownR3)
+    
     
     # print regression results
     sink('reg_output.txt')
+    print('correlation with gdp')
     print(m.dgdp)
+    print('prob ownership 12 months')
     print(coef.h1.own)
+    print('prob ownership 24 months')
     print(coef.h2.own)
+    print('Landlord prob: 1) 12 months 2) 24 months')
+    print(coef.h1.ll)
+    print(coef.h2.ll)
+    print('Multi adult prob: 1) 12 months 2) 24 months')
+    print(coef.h1.size)
+    print(coef.h2.size)
+    print('Robstness: 1) svarhsock 2) sample period 3) svarshock sample period')
+    print(coef.h1.ownR1)
+    print(coef.h1.ownR2)
+    print(coef.h1.ownR3)
     sink()
-    sink()
+    
