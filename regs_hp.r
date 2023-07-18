@@ -61,7 +61,7 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
     
     dtm=merge(dt,Yq,by.x=c('year','qtr'),by.y=c('year','qtr'),all.x=TRUE)
     
-    dtm=dtm[hoh==1&ytot>mininc &age_dv>=20&age_dv<=80&year>=1996&year<=2019]
+    dtm=dtm[hoh==1&ytot>mininc &age_dv>=20&age_dv<=80&year>=1996&year<=2019&renter_so==0]
     #dtm=dtm[ytot>mininc &age_dv>=20&age_dv<=80&year>=1996&year<=2019]
     
     # additional cleaning steps
