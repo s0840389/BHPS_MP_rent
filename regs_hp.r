@@ -224,16 +224,15 @@ setwd('~/OneDrive/Documents/research/BHPS/MP_rents_hp')
       fg=ggplot(data=dtfg)+geom_line(aes(x=q,y=pe),color='darkblue',linewidth=1.2)+
         geom_ribbon(aes(x=q,ymin=l68,ymax=u68),fill='blue',alpha=0.2)+
         #geom_ribbon(aes(x=q,ymin=l90,ymax=u90),fill='blue',alpha=0.1)+
-        theme_minimal(base_size=12)+labs(x=xlab,y='',title=tit)
+        theme_bw()+labs(x=xlab,y=ylab,title=tit)+
+                   theme(text=element_text(size=10))
       
       return(fg) 
     }
     
-    fg.age=fg.hor(coef.h1.age,V.h1.age,'dr',c(25,35,45,57.5,75),'Panel B: Prob of owning home','age','Percentage points')
-    
-    fg.age=fg.age+theme_bw()+theme(text=element_text(size=10))
-    
-    ggsave('own_age.pdf',fg.age,units = 'cm',width=15,height=12)
+    fg.age=fg.hor(coef.h1.age,V.h1.age,'dr',c(25,35,45,57.5,75),'Panel B: Probability of owning home','age','Percentage points')
+    fg.age=fg.age+geom_hline(yintercept = 0,color='grey',linetype='dashed')
+    ggsave('own_age.png',fg.age,units = 'cm',width=12,height=8)
     
     fg.sizeageh1=fg.hor(coef.h1.sizeage,V.h1.sizeage,'dr',c(25,35,45,57.5,75),'Prob of living in multi-adult house (12 months)','age')
     ggsave('size_age_h1.pdf',fg.sizeageh1,units = 'cm',width=15,height=12)
